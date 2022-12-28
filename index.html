@@ -1,1 +1,38 @@
-"hello world" 
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Expr</title>
+  <link rel="stylesheet" href="layout.css" type="text/css" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+  <div class="topbar">
+    <a href="."><img src="icon.jpg" />
+      <div class="title">expr.sh</div>
+    </a>
+    <a class="link" href="docs.html">Docs</a>
+  </div>
+  <div id="results">
+    <div class="filler"></div>
+    <div id="welcome">
+      <div>
+        <h1>Expr</h1>
+        <p>A simple online calculator! Start typing or <a href="docs.html">read some docs</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="inputbg">
+    <div id="errhighlight"></div>
+    <input type="text" id="input" autofocus />
+  </div>
+  <div id="errbox"></div>
+  <div id="resbox"></div>
+  <script src="calc.js"></script>
+  <script async type="text/javascript" src="expr.js"></script>
+  <span id="ruler"></span>
+</body>
+
+</html>

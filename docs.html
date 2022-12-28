@@ -1,0 +1,275 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Expr Docs</title>
+    <link rel="stylesheet" href="layout.css" type="text/css" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+    <div class="topbar">
+        <a href="."><img src="icon.jpg" />
+            <div class="title">expr.sh</div>
+        </a>
+        <a class="link" href="docs.html">Docs</a>
+    </div>
+    <div id="docs">
+        <h1>Expr</h1>
+        <p>
+            expr.sh is a calculator thing intended to be slightly more complicated than the windows calculator, but less
+            complicated than matlab.
+            It supports unit conversions, all your scientific calculator functions and basic graph plots.
+            All calculations take place entirely inside your web browser.
+        </p>
+        <p>
+
+        </p>
+        <pre>
+30 mile/hour * 30 min as km » 24.1402 kilometers
+1gb / (30mbit/second) as min » 4.44444 minutes
+64bit in byte » 8 bytes
+1W * 5min » 300 joule
+5V / 2A » 2.5 ohm
+plot(sin(x))
+</pre>
+        <h2>Values</h2>
+        <p>
+            Numbers are interpreted as signed 64 bit ints (<code>i64</code>) until a <code>.</code> is specified after
+            which they are interpreted as a 64 bit floating point number.
+            You can input hex numbers by prepending <code>0x</code> and binary
+            with <code>0b</code>.
+        </p>
+        <p>The <code>i64() f64() x64() b64()</code> functions can be used to convert between
+            number
+            types. The resulting number type or unit is always printed after the result.
+        </p>
+        <pre>
+5 » 5 i64
+5.2 » 5.2 f64
+0xff » 0xff x64
+0b1011 » 1011b b64
+i64(10.5) » 10 i64
+x64(10.5) » 0xa x64
+i64(0b1011) » 11 i64
+b64(1<<3) » 1000b b64</pre>
+        <h2>Operators</h2>
+        <p>
+            If in doubt, wrap in <code>()</code>. From lowest to highest precendence:<br />
+            <code>=</code> Variable Assignment<br />
+            <code>as</code> <code>in</code> Unit Conversion<br />
+            <code>|</code> Binary OR<br />
+            <code>&</code> Binary AND<br />
+            <code><<</code> Binary Left Shift<br />
+            <code>>></code> Binary Right Shift<br />
+            <code>-</code> Subtract<br />
+            <code>+</code> Add<br />
+            <code>*</code> Multiply<br />
+            <code>/</code> Divide<br />
+            <code>^</code> Raise to power<br />
+            <code>~</code> Binary NOT<br />
+            <code>(</code> <code>)</code> Group<br />
+        </p>
+        <pre>((3*5) << 3) / 2 » 60 f64
+0b1010 | 0b0101 » 1111b b64</pre>
+        <h2>Variable Assignment</h2>
+        <p>
+            You can assign variables with <code>=</code>. Variables must start with a letter. Once assigned variables
+            can be used in later expressions.
+        </p>
+        <pre>
+x = 3 » 3 i64
+a_longer_variable=7 » 7 i64
+x*5 » 15 i64
+x = x + 1 » 4 i64</pre>
+        <h2>Functions</h2>
+        <p>
+            If the number type doesn't match the function then the number is automatically converted to the correct
+            type.
+        </p>
+        <p>
+            <code>sin(x : radians) » f64</code> returns the sine of x in radians<br />
+            <code>cos(x : radians) » f64</code> returns the cosine of x in radians<br />
+            <code>tan(x : radians) » f64</code> returns the tangent of x in radians<br />
+            <code>asin(x : f64) » f64</code> returns the arc sine angle of x in radians<br />
+            <code>acos(x : f64) » f64</code> returns the arc cosine angle of x in radians<br />
+            <code>atan(x : f64) » f64</code> returns the arc tangent angle of x in radians<br />
+            <code>atan2(x : f64, y : f64) » f64</code> returns the arc tangent of y/x in radians<br />
+            <code>ceil(f : f64) » i64</code> returns the smallest integer greater than or equal to f<br />
+            <code>floor(f : f64) » i64</code> returns the largest integer less than or equal to f<br />
+            <code>round(f : f64) » i64</code> rounds to the nearest integer<br />
+            <code>abs(f : f64) » f64</code> returns the absolute value of f<br />
+            <code>clamp(value, min, max : f64|i64) » f64|i64</code> clamps between the min and max value<br />
+            <code>max(a, b : f64|i64) » f64|i64</code> maximum value of a or b<br />
+            <code>min(a, b : f64|i64) » f64|i64</code> minimum value of a or b<br />
+            <code>pow(x, y : f64) » f64</code> raises x to the power y<br />
+            <code>sqrt(f : f64) » f64</code> returns square root of f<br />
+            <code>log2(f : f64) » f64</code> returns natural logarithm of f<br />
+            <code>log10(f : f64) » f64</code> returns natural logarithm of f in base 10<br />
+            <code>exp(f : f64) » f64</code> returns e^f<br />
+        </p>
+        <h2>Constants</h2>
+        <p>
+            <code>pi</code> π ratio of a circle's circumference to its diameter
+            <code>3.14159265358979323846</code><br />
+            <code>e</code> Euler's number. The base of natural logarithms <code>2.7182818284590452354</code><br />
+        </p>
+        <h2>Unit Conversion</h2>
+        <p>
+            You can specify units such as <code>kg</code> after each number.
+            The <code>as</code> or <code>in</code> keyword can be used to convert between units that share the same base
+            unit type.
+        </p>
+        <div class="units">
+            <div>
+                <h3>Distance</h3>
+                <p>
+                    <code>m</code> Meter<br />
+                    <code>km</code> Kilometer<br />
+                    <code>cm</code> Centimeter<br />
+                    <code>mm</code> Millimeter<br />
+                    <code>um</code> Micrometer<br />
+                    <code>nm</code> Nanometer<br />
+                    <code>mi</code> Mile<br />
+                    <code>yd</code> Yard<br />
+                    <code>in</code> Inch<br />
+                </p>
+            </div>
+            <div>
+                <h3>Time</h3>
+                <p>
+                    <code>s</code> Second<br />
+                    <code>ms</code> Millisecond<br />
+                    <code>us</code> Microsecond<br />
+                    <code>ns</code> Nanosecond<br />
+                    <code>min</code> Minute<br />
+                    <code>hour</code> Hour<br />
+                    <code>day</code> Day<br />
+                    <code>week</code> Week<br />
+                    <code>month</code> Month<br />
+                    <code>year</code> Year<br />
+                    <code>hz</code> Hertz <code>1/second</code><br />
+                </p>
+            </div>
+            <div>
+                <h3>Weight</h3>
+                <p>
+                    <code>g</code> Gram<br />
+                    <code>kg</code> Kilogram<br />
+                    <code>mg</code> Milligram<br />
+                    <code>ug</code> Microgram<br />
+                    <code>t</code> Metric Tonne<br />
+                    <code>pound</code> Imperial Pound<br />
+                    <code>ounce</code> Imperial Ounce<br />
+                    <code>stone</code> Imperial Stone<br />
+                    <code>ton</code> Imperial Ton<br />
+                </p>
+            </div>
+            <div>
+                <h3>Data</h3>
+                <p>
+                    <code>bit</code> Bit<br />
+                    <code>kbit</code> Kilobit <code>1000 bits</code><br />
+                    <code>mbit</code> Megabit <code>10^6 bits</code><br />
+                    <code>gbit</code> Gigabit <code>10^9 bits</code><br />
+                    <code>tbit</code> Terabit <code>10^12 bits</code><br />
+                </p>
+                <p>
+                    <code>byte</code> Byte <code>8 bits</code><br />
+                    <code>kb</code> Kilobyte <code>1000 bytes</code><br />
+                    <code>mb</code> Megabyte <code>10^6 bytes</code><br />
+                    <code>gb</code> Gigabyte <code>10^9 bytes</code><br />
+                    <code>tb</code> Terabyte <code>10^12 bytes</code><br />
+                </p>
+                <p>
+                    <code>kib</code> Kibibyte <code>1024 bytes</code><br />
+                    <code>mib</code> Mebibyte <code>1024^2 bytes</code><br />
+                    <code>gib</code> Gibibyte <code>1024^3 bytes</code><br />
+                    <code>tib</code> Tebibyte <code>1024^4 bytes</code><br />
+                </p>
+            </div>
+            <div>
+                <h3>Temperature</h3>
+                <p>
+                    <code>k</code> Kelvin<br />
+                    <code>c</code> Celsius<br />
+                    <code>F</code> Farenheit<br />
+                </p>
+                <h3>Power</h3>
+                <p>
+                    <code>A</code> Amp
+                </p>
+                <h3>Angle</h3>
+                <p>
+                    <code>d</code> Degrees<br />
+                    <code>r</code> Radians <code>180 / π</code><br />
+                    <code>turn</code> Turns <code>1 / 2π</code><br />
+                    <code>grad</code> Gradians <code>200 / π</code><br />
+                </p>
+            </div>
+            <div>
+                <h3>Derived Units</h3>
+                <p>
+                    <code>n</code> Newton <code>(kg*m)/(s^2)</code><br />
+                    <code>Pa</code> Pascal <code>kg/(m * s^2)</code><br />
+                    <code>j</code> Joule <code>(kg*m^2)/(s^2)</code><br />
+                    <code>W</code> Watt <code>(kg*m^2)/(s^3)</code><br />
+                    <code>C</code> Coulomb <code>s*A</code><br />
+                    <code>V</code> Volt <code>(kg*m^2)/(s^3*A)</code><br />
+                    <code>F</code> Farad <code>(kg*s^4*A)/(m^2)</code><br />
+                    <code>I</code> Ohm <code>(kg*m^2)/(s^3*A^2)</code><br />
+                </p>
+            </div>
+        </div>
+        <div class="unitsclear">&nbsp;</div>
+        <h2>Graphs</h2>
+        <p>Use the special <code>plot()</code> function to visually plot a function on the screen.</p>
+        <p>This evaluates the expression inside the brackets for each pixel. The expression can assume that the
+            <code>x</code> variable exists.
+        </p>
+        <pre>plot(sin(x))</pre>
+        <h2>Useful Functions</h2>
+        <table>
+            <tr>
+                <td>Smoothstep</td>
+                <td><code>plot(x*x*(3-2*x))</code></td>
+            </tr>
+            <tr>
+                <td>Almost Identity</td>
+                <td><code>plot(sqrt(x*x+n))</code></td>
+            </tr>
+            <tr>
+                <td>Exponential Impulse</td>
+                <td><code>n=4</code> <code>plot((n*x)*exp(1.0-(n*x)))</code></td>
+            </tr>
+            <tr>
+                <td>Cubic Pulse</td>
+                <td><code>plot(1.0-abs(x)*abs(x)*(3-2*abs(x)))</code></td>
+            </tr>
+            <tr>
+                <td>Parabola</td>
+                <td><code>n=4</code> <code>plot(pow(4*x*(1-x), n))</code></td>
+            </tr>
+            <tr>
+                <td>Sinc</td>
+                <td><code>n=4</code> <code>plot(sin(pi*(n*x-1))/(pi*(n*x-1)))</code></td>
+            </tr>
+        </table>
+        <div class="unitsclear"></div>
+
+        <h2>About</h2>
+        <p>expr.sh is a silly side project by Alex Parker. Expect bugs so
+            don't use this for any engineering or other serious work. Use matlab or python notebooks
+            or a proper calculator instead. To be clear:</p>
+        <pre>The software is provided "as is", without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose and noninfringement. In no event shall the
+author or copyright holder be liable for any claim, damages or other
+liability, whether in an action of contract, tort or otherwise, arising from,
+out of or in connection with the software or the use or other dealings in
+the software.</pre>
+    </div>
+</body>
+
+</html>
