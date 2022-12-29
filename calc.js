@@ -184,6 +184,9 @@ window.onload = function () {
                     if (input_str.startsWith("plot(")) {
                         graphel = document.createElement("canvas");
                         height = Math.floor((window.innerHeight - 100) / 2);
+                        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                            height *= 2;
+                        }
                         graphel.height = height;
                         graphel.style.height = height + "px";
                         results.appendChild(graphel);
@@ -214,6 +217,7 @@ window.onload = function () {
                         }
 
                         let xdragstart = 0.0, ydragstart = 0.0, xoffstart = 0.0, yoffstart = 0.0, is_dragging = false;
+                        let startscale = 0.0, startscalex = 0.0, startscaley = 0.0, is_scaling = false;
                         resetbuttonel.onclick = () => {
                             xoff = width / 2, yoff = height / 2, xscale = 0.1, yscale = 0.1;
                             if (width > height) {
@@ -223,6 +227,7 @@ window.onload = function () {
                             }
                             drawgraph(input_str, ctx, width, height, xoff, yoff, xscale, yscale);
                         };
+                        function getscaledist(e) { return Math.abs(e.touches[0].clientX - e.touches[1].clientX); }
                         graphel.ontouchstart = evt => {
                             if (evt.touches.length == 1) {
                                 is_dragging = true;
@@ -231,13 +236,31 @@ window.onload = function () {
                             } else {
                                 is_dragging = false;
                             }
+                            if (evt.touches.length == 2) {
+                                startscale = getscaledist(evt); startscalex = xscale; startscaley = yscale;
+                                is_scaling = true;
+                            } else {
+                                is_scaling = false;
+                            }
+                            evt.preventDefault();
                         };
                         graphel.ontouchmove = evt => {
                             if (evt.touches.length == 1 && is_dragging) {
                                 xoff = xoffstart + evt.touches[0].clientX - xdragstart;
-                                yoff = yoffstart + evt.touches[0].clientX - ydragstart;
+                                yoff = yoffstart + evt.touches[0].clientY - ydragstart;
+                                drawgraph(input_str, ctx, width, height, xoff, yoff, xscale, yscale);
+                            } else if (evt.touches.length == 2 && is_scaling) {
+                                let delta = getscaledist(evt) / startscale;
+                                xscale = delta * startscalex;
+                                yscale = delta * startscaley;
+                                if (width > height) {
+                                    yscale = xscale * width / height;
+                                } else {
+                                    xscale = yscale * height / width;
+                                }
                                 drawgraph(input_str, ctx, width, height, xoff, yoff, xscale, yscale);
                             }
+                            evt.preventDefault();
                         };
                         graphel.ontouchcancel = () => { is_dragging = false; };
                         graphel.ontouchend = () => { is_dragging = false; };
@@ -255,6 +278,7 @@ window.onload = function () {
                                 yoff = yoffstart + evt.clientY - ydragstart;
                                 drawgraph(input_str, ctx, width, height, xoff, yoff, xscale, yscale);
                             }
+                            evt.preventDefault();
                         };
                         graphel.onmouseup = () => { is_dragging = false; };
                         graphel.onmouseleave = () => { is_dragging = false; };

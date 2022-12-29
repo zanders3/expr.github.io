@@ -325,6 +325,7 @@ pre {
     font-size: 16px;
     border: 1px solid #1a2025;
     border-radius: 4px;
+    white-space: pre-wrap;
 }
 
 #results {
